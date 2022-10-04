@@ -1,3 +1,4 @@
+from email.policy import default
 import markdown
 
 from django.utils.html import strip_tags
@@ -49,6 +50,13 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, verbose_name='标签', blank=True)
     # 文章作者
     author = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
+    # 新增 views 字段记录阅读量
+    views = models.PositiveIntegerField(default=0, editable=False)
+
+    def increase_views(self):
+        self.views +=1
+        self.save(update_fields=['views'])
+
 
     class Meta:
         verbose_name = '文章'
